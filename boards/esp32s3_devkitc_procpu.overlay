@@ -1,0 +1,31 @@
+/ {
+    aliases {
+        i2c1 = &i2c1;
+        vl53l1x = &vl53l1x;
+    };
+};
+
+&pinctrl {
+    i2c1_default: i2c1_default {
+        group1 {
+            pinmux = <I2C1_SCL_GPIO17>,
+                    <I2C1_SDA_GPIO18>;
+            bias-pull-up;
+            drive-open-drain;
+            output-high;
+        };
+    };
+};
+
+&i2c1 {
+    status = "okay";
+    clock-frequency = <I2C_BITRATE_STANDARD>;
+    pinctrl-0 = <&i2c1_default>;
+    vl53l1x: vl53l1x@29 {
+        compatible = "st,vl53l1x";
+        friendly-name = "top-view";
+        label = "L1X-TOP";
+        reg = <0x29>;
+    };
+};
+

@@ -1,0 +1,7 @@
+build/
+zephyr/
+modules/
+deps/
+bootloader/
+.west/
+twister-out/

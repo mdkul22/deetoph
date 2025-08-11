@@ -1,0 +1,24 @@
+# west.yml (at the root of your app repo)
+manifest:
+  version: "0.14"
+
+  remotes:
+    - name: zephyrproject-rtos
+      url-base: https://github.com/zephyrproject-rtos
+
+  projects:
+    - name: zephyr
+      remote: zephyrproject-rtos
+      revision: v4.0.99        # <-- pin the Zephyr version/tag/sha you want
+      import:
+        path-prefix: deps     # optional: place imported projects under deps/
+        name-allowlist:
+          - modules
+          - tools
+          - hal
+          - bootloader
+          - cmsis
+
+  self:
+    path: app                 # how your app will appear inside the workspace
+
