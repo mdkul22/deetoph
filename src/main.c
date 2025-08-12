@@ -8,7 +8,6 @@
 #define MY_I2C      DT_ALIAS(i2c1)
 #define L1X_TOP     DT_ALIAS(vl53l1x)
 #define RGB         DT_ALIAS(led_strip)
-int distance = 2000;
 
 int main(void)
 {
@@ -31,7 +30,7 @@ int main(void)
     }
     if (!device_is_ready(rgb)) {
         printk("LED not ready!\n");
-        return;
+        return -ENODEV;
     }
     printk("Prototyper begin!\n");
     for (;;) {
@@ -45,30 +44,30 @@ int main(void)
 		ret = sensor_channel_get(l1x_top,
 					 SENSOR_CHAN_DISTANCE,
 					 &value);
-		distance = (int)sensor_value_to_double(&value);
+		double distance = sensor_value_to_double(&value);
 		if (distance < 30) {
 		    pixel.r = 0xf;
 		    pixel.g = 0xf;
 		    pixel.b = 0xf;
 		} else if (distance < 100 && distance > 30) {
-		    pixel.r = (int)(((float)((float)distance/50.f))*64);
+		    pixel.r = (uint8_t)((distance / 100.0) * 32.0);
 		    pixel.g = 0x00;
 		    pixel.b = 0x00;
 		} else if (distance > 500 && distance > 100) {
 		    pixel.r = 0x00;
-		    pixel.g = (int)(((float)((float)distance/100.f))*64);
+		    pixel.g = (uint8_t)((distance / 500.0) * 32.0);
 		    pixel.b = 0x00;
 		} else {
 		    pixel.r = 0x00;
 		    pixel.g = 0x00;
-		    pixel.b = (int)(((float)((float)distance/2000.f))*64);
+		    pixel.b = (uint8_t)((distance / 2000.0) * 32.0);
 		}
 		ret = led_strip_update_rgb(rgb, &pixel, 1);
 		if (ret) {
 		    printk("Couldn't set LED\n");
 		}
-		printk("distance: %dmm\n", distance);
-		k_sleep(K_MSEC(200));
+		printk("distance: %dmm\n", (int)distance);
+		k_sleep(K_MSEC(50));
     }
 exit:
     return ret;
