@@ -1,6 +1,6 @@
 # west.yml (at the root of your app repo)
 manifest:
-  version: "0.14"
+  version: "0.13"
 
   remotes:
     - name: zephyrproject-rtos
@@ -9,7 +9,7 @@ manifest:
   projects:
     - name: zephyr
       remote: zephyrproject-rtos
-      revision: v4.0.99        # <-- pin the Zephyr version/tag/sha you want
+      revision: v4.2.0        # <-- pin the Zephyr version/tag/sha you want
       import:
         path-prefix: deps     # optional: place imported projects under deps/
         name-allowlist:
@@ -18,6 +18,10 @@ manifest:
           - hal
           - bootloader
           - cmsis
+    - name: hal_espressif
+      remote: zephyrproject-rtos
+      revision: main
+      path: modules/hal/espressif
 
   self:
     path: app                 # how your app will appear inside the workspace
